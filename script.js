@@ -680,3 +680,44 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 });
+
+// Contact Form
+const contactForm = document.getElementById("portfolioContactForm");
+
+if (contactForm) {
+    contactForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const button = this.querySelector('button[type="submit"]');
+        const originalText = button.innerHTML;
+
+        button.disabled = true;
+        button.innerHTML = "Sending...";
+
+        try {
+            const response = await fetch(this.action, {
+                method: "POST",
+                body: new FormData(this),
+                headers: {
+                    Accept: "application/json"
+                }
+            });
+
+            if (response.ok) {
+                button.innerHTML = "✓ Message Sent!";
+                this.reset();
+
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                }, 4000);
+            } else {
+                button.innerHTML = "Try Again";
+                button.disabled = false;
+            }
+        } catch (error) {
+            button.innerHTML = "Try Again";
+            button.disabled = false;
+        }
+    });
+}
